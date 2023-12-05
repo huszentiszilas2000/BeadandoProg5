@@ -1,0 +1,98 @@
+<div class="container">
+  <div class="border">
+    <button class="btn btn-md btn-outline-primary" (click)="open(content)">
+      <i class="fa fa-user"></i>New User</button>
+    <button class="btn btn-md btn-outline-primary" (click)="getUsers()">
+    <i class="fa fa-user"></i>List Users</button>
+    <button class="btn btn-md btn-outline-primary" (click)="logout()">
+      <i class="fa fa-user"></i>Logout</button>
+  </div>
+  <table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Firstname</th>
+      <th>Lastname</th>
+      <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of users">
+      <td><span>{{user.id}}</span></td>
+      <td><span>{{user.username}}</span></td>
+      <td><span>{{user.firstName}}</span></td>
+      <td><span>{{user.lastName}}</span></td>
+      <td><span>{{user.email}}</span></td>
+      <td>
+        <button class="btn btn-sm btn-warning" >
+          <i class="fa fa-edit"></i>Edit</button>
+        <button class="btn btn-sm btn-danger" (click)="openDelete(contentDelete, user)">
+          <i class="fa fa-remove"></i>Delete</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">New User</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-group">
+          <input id="username" name="username" class="form-control" ngModel>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-group">
+          <input id="password" name="password" type="password" class="form-control" ngModel>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="firstName">Firstname</label>
+        <div class="input-group">
+          <input id="firstName" name="firstName"  class="form-control" ngModel>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Lastname</label>
+        <div class="input-group">
+          <input id="lastName" name="lastName" class="form-control" ngModel>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-group">
+          <input type="email" id="email" name="email" class="form-control" ngModel email required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Close</button>
+        <button data-dismiss="modal" class="btn btn-info">Save</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #contentDelete let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Confirm Delete</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h2>Do you want to delete the record?</h2>
+  </div>
+  <div class="modal-footer">
+    <button data-dismiss="modal" class="btn btn-danger" (click)="onDelete()">Yes!</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Delete click')">Cancel</button>
+  </div>
+</ng-template>
