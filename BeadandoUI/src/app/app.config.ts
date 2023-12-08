@@ -12,7 +12,7 @@ export const authCodeConfig: AuthConfig =
   redirectUri:window.location.origin,
   clientId: 'beadando',
   responseType: 'code',
-  scope: 'openid profile'
+  scope: 'openid profile offline_access'
 }
 
 function initializeOAuth(oauthService: OAuthService): Promise<void>{
