@@ -24,9 +24,11 @@
       <td><span>{{user.email}}</span></td>
       <td>
         <button class="btn btn-sm btn-warning" (click)="openEdit(contentEdit, user)">
-          <i class="fa fa-edit"></i>Edit</button>
-        <button class="btn btn-sm btn-danger" (click)="openDelete(contentDelete, user)">
-          <i class="fa fa-remove"></i>Delete</button>
+          Edit</button>
+        <button class="btn btn-sm btn-danger" (click)="openWithUserID(contentDelete, user)">
+          Delete</button>
+        <button class="btn btn-sm btn-info" (click)="openWithUserID(contentResetPassword, user)">
+          Reset password</button>
       </td>
     </tr>
     </tbody>
@@ -76,6 +78,22 @@
         <button data-dismiss="modal" class="btn btn-info">Save</button>
       </div>
     </form>
+  </div>
+</ng-template>
+
+<ng-template #contentResetPassword let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Confirm Reset</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h2>Do you want to reset the password?</h2>
+  </div>
+  <div class="modal-footer">
+    <button data-dismiss="modal" class="btn btn-danger" (click)="onReset()">Yes!</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Delete click')">Cancel</button>
   </div>
 </ng-template>
 

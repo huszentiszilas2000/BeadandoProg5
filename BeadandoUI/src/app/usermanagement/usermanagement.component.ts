@@ -5,6 +5,7 @@ import {delay} from "rxjs";
 import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {HttpClient} from "@angular/common/http";
 import {OAuthService} from "angular-oauth2-oidc";
+import Swal from "sweetalert2";
 
 export class User {
   constructor(
@@ -33,7 +34,7 @@ export class UsermanagementComponent implements OnInit  {
 
   users: User[];
   closeResult: string;
-  deleteId: string;
+  userId: string;
   editForm: FormGroup;
 
   constructor(private oauthService: OAuthService, private httpClient : HttpClient, private modelService: NgbModal, private formBuilder: FormBuilder) {
@@ -58,9 +59,10 @@ export class UsermanagementComponent implements OnInit  {
       {headers: {
           'Authorization' : `Bearer ${this.oauthService.getAccessToken()}`
         }})
-      .subscribe((result) => {
-        this.ngOnInit();
+      .subscribe((response:any) => {
+        Swal.fire( 'Success', response.message, 'success');
       });
+    this.ngOnInit();
     this.modelService.dismissAll();
   }
 
@@ -83,7 +85,8 @@ export class UsermanagementComponent implements OnInit  {
   }
 
   getUsers() {
-    this.httpClient.get<any>('http://localhost:8080/api/user/users',
+    const url = 'http://localhost:8080/api/user/users'
+    this.httpClient.get<any>(url,
       {headers: {
           'Authorization' : `Bearer ${this.oauthService.getAccessToken()}`
         }}).pipe(delay(400)).subscribe(
@@ -99,10 +102,11 @@ export class UsermanagementComponent implements OnInit  {
       {headers: {
           'Authorization' : `Bearer ${this.oauthService.getAccessToken()}`
         }})
-      .subscribe((result) => {
-        this.ngOnInit();
+      .subscribe((response:any) => {
+        Swal.fire( 'Success', response.message, 'success');
       });
     this.modelService.dismissAll();
+    this.ngOnInit();
   }
 
   open(content) {
@@ -113,23 +117,36 @@ export class UsermanagementComponent implements OnInit  {
     });
   }
 
-  openDelete(targetModal, user: User) {
-    this.deleteId = user.id;
+  openWithUserID(targetModal, user: User) {
+    this.userId = user.id;
     this.modelService.open(targetModal, {
-      backdrop: 'static',
-      size: 'lg'
+      backdrop: 'static'
     });
+  }
+
+  onReset()
+  {
+    const url = 'http://localhost:8080/api/user/reset-password/' + this.userId;
+    this.httpClient.get<any>(url,
+      {headers: {
+          'Authorization' : `Bearer ${this.oauthService.getAccessToken()}`
+        }})
+      .subscribe((response:any) => {
+        Swal.fire( 'Success', response.message, 'success');
+      });
+    this.modelService.dismissAll();
+    this.ngOnInit();
   }
 
   onDelete()
   {
-    const url = 'http://localhost:8080/api/user/' + this.deleteId;
+    const url = 'http://localhost:8080/api/user/' + this.userId;
     this.httpClient.delete(url,
       {headers: {
           'Authorization' : `Bearer ${this.oauthService.getAccessToken()}`
         }})
-      .subscribe((results) => {
-          this.ngOnInit();
+      .subscribe((response:any) => {
+          Swal.fire( 'Success', response.message, 'success');
       });
     this.modelService.dismissAll();
     this.ngOnInit();

@@ -10,6 +10,7 @@ public class CustomJwt extends JwtAuthenticationToken {
 
     private String firstName;
     private String lastName;
+    private String id;
 
     public CustomJwt(Jwt jwt, Collection<? extends GrantedAuthority> authorities) {
         super(jwt, authorities);
@@ -29,5 +30,13 @@ public class CustomJwt extends JwtAuthenticationToken {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

@@ -4,6 +4,10 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: 'http://localhost:8180/realms/beadando'
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
 
 beadando:
   keycloak:
@@ -11,5 +15,7 @@ beadando:
     serverURL: 'http://localhost:8180'
     clientID: 'beadandobackend'
     clientSecret: 'caLCRW31Nyuwdiwkr8NCYSVLfQft1SCl'
+  filemanager:
+    rootpath: 'uploads'
 
 
