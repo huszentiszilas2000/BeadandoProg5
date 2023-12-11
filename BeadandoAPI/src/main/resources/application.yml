@@ -1,4 +1,11 @@
 spring:
+  jpa:
+    open-in-view: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/beadando?schema=public
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
   security:
     oauth2:
       resourceserver:
@@ -17,5 +24,6 @@ beadando:
     clientSecret: 'caLCRW31Nyuwdiwkr8NCYSVLfQft1SCl'
   filemanager:
     rootpath: 'uploads'
+
 
 

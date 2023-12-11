@@ -10,7 +10,8 @@ import * as FileSaver from 'file-saver';
 
 export class FileName {
   constructor(
-    public name: string
+    public filename: string,
+    public date_added: string,
   ) {
   }
 }
@@ -59,7 +60,7 @@ export class FilemanagerComponent implements OnInit {
 
   download(file)
   {
-    this.httpClient.get<Blob>('http://localhost:8080/api/file/download/' + file.name,
+    this.httpClient.get<Blob>('http://localhost:8080/api/file/download/' + file.filename,
       {headers: {
           'Authorization' : `Bearer ${this.oauthService.getAccessToken()}`
         }, responseType: 'blob' as 'json'  }).subscribe(
@@ -67,7 +68,7 @@ export class FilemanagerComponent implements OnInit {
         let dataType = response.type;
         let binaryData: any = [];
         binaryData.push(response);
-        FileSaver.saveAs(new Blob(binaryData, {type: dataType}), file.name);
+        FileSaver.saveAs(new Blob(binaryData, {type: dataType}), file.filename);
       },error => {
         Swal.fire( 'Error', error.message, 'error');}
     );
@@ -93,7 +94,7 @@ export class FilemanagerComponent implements OnInit {
 
   openDelete(content, file)
   {
-    this.deleteFile = file.name;
+    this.deleteFile = file.filename;
     this.modelService.open(content, {
       backdrop: 'static',
       size: 'lg'

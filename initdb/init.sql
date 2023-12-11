@@ -8,12 +8,12 @@ CREATE ROLE beadando WITH
 	CONNECTION LIMIT -1
 	PASSWORD '12345678';
 
-CREATE TABLE department (
+CREATE TABLE file_info (
 id serial PRIMARY KEY,
-firstname VARCHAR(100) NOT NULL,
-lastname VARCHAR(100) NOT NULL,
-country VARCHAR(100) NOT NULL
+userid VARCHAR(200) NOT NULL,
+filename VARCHAR(100) NOT NULL,
+date_added timestamp NOT NULL
 );
 
-INSERT INTO department (firstname, lastname, country) values ('Teszt', 'Elek', 'HU');
-INSERT INTO department (firstname, lastname, country) values ('Szuper', 'Áron', 'AU');
+ALTER TABLE file_info
+    ADD CONSTRAINT fk_orders_customers FOREIGN KEY (userid) REFERENCES user_entity (id);

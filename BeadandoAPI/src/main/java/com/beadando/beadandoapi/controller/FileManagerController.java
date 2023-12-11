@@ -1,5 +1,6 @@
 package com.beadando.beadandoapi.controller;
 
+import com.beadando.beadandoapi.dto.FileInfoDTO;
 import com.beadando.beadandoapi.jwt.CustomJwt;
 import com.beadando.beadandoapi.model.FileInfo;
 import com.beadando.beadandoapi.model.ResponseMessage;
@@ -65,15 +66,9 @@ public class FileManagerController {
 
     @GetMapping("/myfiles")
     @PreAuthorize("hasAnyAuthority('ROLE_MEMBER', 'ROLE_ADMIN')")
-    public ResponseEntity<List<FileInfo>> getListFiles() {
+    public ResponseEntity<List<FileInfoDTO>> getListFiles() {
         var jwt = (CustomJwt) SecurityContextHolder.getContext().getAuthentication();
-        List<FileInfo> fileInfos = managerService.loadAll(jwt.getName()).map(path -> {
-            String filename = path.getFileName().toString();
-
-            return new FileInfo(filename);
-        }).collect(Collectors.toList());
-
-        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+        return ResponseEntity.status(HttpStatus.OK).body(managerService.loadAll(jwt.getName()));
     }
 
     @GetMapping("/download/{filename:.+}")

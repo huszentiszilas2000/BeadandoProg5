@@ -1,6 +1,11 @@
 package com.beadando.beadandoapi.service;
 
 import com.beadando.beadandoapi.config.FileManagerConfig;
+import com.beadando.beadandoapi.db.FileInfoRepository;
+import com.beadando.beadandoapi.dto.FileInfoDTO;
+import com.beadando.beadandoapi.model.FileInfo;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -14,12 +19,21 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@RequiredArgsConstructor
 public class FileManagerService {
     @Autowired
     FileManagerConfig fileManagerConfig;
+
+    private final FileInfoRepository fileInfoRepository;
+
 
     public void initRoot() {
         try {
@@ -35,7 +49,7 @@ public class FileManagerService {
             Files.createDirectories(path);
             return path;
         } catch (IOException e) {
-            throw new RuntimeException("Could not initialize folder for upload!");
+            throw new RuntimeException("Could not initialize folder for user!");
         }
     }
 
@@ -43,6 +57,7 @@ public class FileManagerService {
         Path path = getUserPathOrCreate(userId);
         try {
             Files.copy(file.getInputStream(), path.resolve(file.getOriginalFilename()));
+            fileInfoRepository.save(new FileInfo(userId, file.getOriginalFilename(), Timestamp.from(Instant.now())));
         } catch (Exception e) {
             if (e instanceof FileAlreadyExistsException) {
                 throw new RuntimeException("A file of that name already exists.");
@@ -61,7 +76,7 @@ public class FileManagerService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("Could not read the file!");
+                throw new RuntimeException("Can't read the file!");
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException("Error: " + e.getMessage());
@@ -78,18 +93,20 @@ public class FileManagerService {
         }
     }
 
+    @Transactional
     public boolean delete(String filename, String userId) {
         Path userPath = getUserPathOrCreate(userId);
-        String asd = userPath.toAbsolutePath().toString();
+        this.fileInfoRepository.deleteByUseridAndFilename(userId, filename);
         return new File(userPath.toAbsolutePath() + "/" + filename).delete();
     }
 
-    public Stream<Path> loadAll(String userId) {
-        Path userPath = getUserPathOrCreate(userId);
-        try {
-            return Files.walk(userPath, 1).filter(path -> !path.equals(userPath)).map(userPath::relativize);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load the files!");
-        }
+    public List<FileInfoDTO> loadAll(String userId) {
+        if( userId.isEmpty())
+            return null;
+
+        List<FileInfo> fileInfos = this.fileInfoRepository.findAllByUserid(userId);
+        return fileInfos.stream()
+                .map(entity -> new FileInfoDTO(entity.getFilename(), entity.getDate_added()))
+                .collect(Collectors.toList());
     }
 }

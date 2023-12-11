@@ -9,12 +9,14 @@
     <thead>
     <tr>
       <th>File</th>
+      <th>Creation date</th>
       <th>Action</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let file of files">
-      <td><span>{{file.name}}</span></td>
+      <td><span>{{file.filename}}</span></td>
+      <td><span>{{file.date_added}}</span></td>
       <td>
         <button class="btn btn-sm btn-primary" (click)="download(file)">
           <i class="fa fa-edit"></i>Download</button>
