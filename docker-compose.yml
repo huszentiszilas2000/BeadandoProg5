@@ -42,6 +42,8 @@ services:
           - "8787:8787"
         networks:
           - beadando-network
+        volumes:
+          - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
 
 networks:
     beadando-network:
